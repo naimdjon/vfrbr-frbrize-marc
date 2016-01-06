@@ -34,6 +34,10 @@ import edu.indiana.dlib.vfrbr.frbrize.batchloading.mappers.WorkMapper;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcCollection;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcDataField;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord;
+import org.apache.log4j.Logger;
+import org.yaz4j.Connection;
+import org.yaz4j.ResultSet;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,10 +45,6 @@ import java.io.InputStream;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
 import java.util.Properties;
-import org.apache.log4j.Logger;
-
-import org.yaz4j.Connection;
-import org.yaz4j.ResultSet;
 
 
 public class AuthorityHandler {
@@ -89,7 +89,7 @@ public class AuthorityHandler {
                 authCacheProps.load(inSteam);
                 // and set the path fields
                 CACHE_PATH =
-                        authCacheProps.getProperty("auth_cache_root");
+                        authCacheProps.getProperty("auth_cache_root").replaceFirst("^~",System.getProperty("user.home"));
                 CORP_CACHE_PATH =
                         CACHE_PATH + authCacheProps.getProperty("auth_cache_path_corp");
                 PEOPLE_CACHE_PATH =
