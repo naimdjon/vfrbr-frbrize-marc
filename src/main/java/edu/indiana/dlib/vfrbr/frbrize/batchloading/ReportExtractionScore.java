@@ -1,21 +1,21 @@
 /**
  * Copyright 2009-2011, Trustees of Indiana University
  * All rights reserved.
- *
+ * <p/>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- *
- *   Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- *   Neither the name of Indiana University nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
+ * <p/>
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * <p/>
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p/>
+ * Neither the name of Indiana University nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p/>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,6 +30,8 @@
  */
 package edu.indiana.dlib.vfrbr.frbrize.batchloading;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -41,12 +43,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import org.apache.log4j.Logger;
 
 /**
- *
  * Note: only the tab6 report has been converted to be of only scores.
- * 
+ *
  * @author pbmcelwa
  */
 public class ReportExtractionScore {
@@ -142,8 +142,9 @@ public class ReportExtractionScore {
     }
 
     /**
-     *  Load properties.
+     * Load properties.
      * Should swallow exceptions, log them, and return empty Properties.
+     *
      * @param propName String name of properties to load.
      * @return a Properties, of properties loaded, or empty if errors.
      */
@@ -189,14 +190,10 @@ public class ReportExtractionScore {
         try {
             // load the DriverManager
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-
             // get the connection
-            String url =
-                    jdbcProps.getProperty("javax.persistence.jdbc.url");
-            String user =
-                    jdbcProps.getProperty("javax.persistence.jdbc.user");
-            String password =
-                    jdbcProps.getProperty("javax.persistence.jdbc.password");
+            String url = jdbcProps.getProperty("javax.persistence.jdbc.url");
+            String user = jdbcProps.getProperty("javax.persistence.jdbc.user");
+            String password = System.getProperty("javax.persistence.jdbc.password", jdbcProps.getProperty("javax.persistence.jdbc.password"));
 
             log.info("-- connecting to: " + url);
             log.info("              as: " + user);
@@ -859,7 +856,7 @@ public class ReportExtractionScore {
             // open the file for the csv data
             PrintWriter out =
                     new PrintWriter(new File(this.CSV_PATH, this.REP6_FILENAME),
-                                    "UTF-8");
+                            "UTF-8");
             log.info("    -- PrintWriter opened on "
                     + this.CSV_PATH + " " + this.REP6_FILENAME);
 

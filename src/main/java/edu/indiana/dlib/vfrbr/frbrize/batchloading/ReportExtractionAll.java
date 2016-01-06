@@ -30,6 +30,8 @@
  */
 package edu.indiana.dlib.vfrbr.frbrize.batchloading;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -41,7 +43,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -193,7 +194,7 @@ public class ReportExtractionAll {
             String user =
                     jdbcProps.getProperty("javax.persistence.jdbc.user");
             String password =
-                    jdbcProps.getProperty("javax.persistence.jdbc.password");
+                    System.getProperty("javax.persistence.jdbc.password", jdbcProps.getProperty("javax.persistence.jdbc.password"));
 
             log.info("-- connecting to: " + url);
             log.info("              as: " + user);
