@@ -1,21 +1,21 @@
 /**
  * Copyright 2009-2011, Trustees of Indiana University
  * All rights reserved.
- *
+ * <p/>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- *
- *   Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- *   Neither the name of Indiana University nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
+ * <p/>
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * <p/>
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p/>
+ * Neither the name of Indiana University nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p/>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,10 +33,13 @@ package edu.indiana.dlib.vfrbr.frbrize.batchloading;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcCollection;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord;
 import edu.indiana.dlib.vfrbr.persist.dao.DAOFactory;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import org.apache.log4j.Logger;
 
 /**
  *  FRBRize MARC bibliographic marcRec files to database persistence.
@@ -51,26 +54,26 @@ public final class BatchLoading {
 
     // TODO externalize the data file list to be outside the compiled code
     private final String[] MARC_FILES = {
-        "frbr01.mrc",
-        "frbr02.mrc",
-        "frbr03.mrc",
-        "frbr04.mrc",
-        "frbr05.mrc",
-        "frbr06.mrc",
-        "frbr07.mrc",
-        "frbr08.mrc",
-        "frbr09.mrc",
-        "frbr10.mrc",
-        "frbr11.mrc",
-        "frbr12.mrc",
-        "frbr13.mrc",
-        "frbr14.mrc",
-        "frbr15.mrc",
-        "frbr16.mrc",
-        "frbr17.mrc",
-        "frbr18.mrc",
-        "frbr19.mrc",
-        "frbr20.mrc"
+            "frbr01.mrc",
+            "frbr02.mrc",
+            "frbr03.mrc",
+            "frbr04.mrc",
+            "frbr05.mrc",
+            "frbr06.mrc",
+            "frbr07.mrc",
+            "frbr08.mrc",
+            "frbr09.mrc",
+            "frbr10.mrc",
+            "frbr11.mrc",
+            "frbr12.mrc",
+            "frbr13.mrc",
+            "frbr14.mrc",
+            "frbr15.mrc",
+            "frbr16.mrc",
+            "frbr17.mrc",
+            "frbr18.mrc",
+            "frbr19.mrc",
+            "frbr20.mrc"
     };
 
     public static final String PERSON_ATTRIBUTE = "Person";
@@ -79,92 +82,92 @@ public final class BatchLoading {
 
     // TODO fix WorkIdentification to use titles black list properties
     protected static final String[] COLLECTIVE_TITLES_BLACK_LIST = {
-        "Chamber music",
-        "Choral music",
-        "Electronic music",
-        "Harpsichord music",
-        "Instrumental music",
-        "Lute music",
-        "Keyboard music",
-        "Musicals",
-        "Orchestra music",
-        "Organ music",
-        "Piano music",
-        "Selections",
-        "String quartet music",
-        "Violin, harpsichord music",
-        "Violin, piano music",
-        "Violoncello, piano music",
-        "Vocal music",
-        "Works"};
+            "Chamber music",
+            "Choral music",
+            "Electronic music",
+            "Harpsichord music",
+            "Instrumental music",
+            "Lute music",
+            "Keyboard music",
+            "Musicals",
+            "Orchestra music",
+            "Organ music",
+            "Piano music",
+            "Selections",
+            "String quartet music",
+            "Violin, harpsichord music",
+            "Violin, piano music",
+            "Violoncello, piano music",
+            "Vocal music",
+            "Works"};
 
     // TODO fix WorkIdentification to use forms properties instead of this list
     protected static final String[] FORMS_LIST = {
-        "Adagios",
-        "Allegros",
-        "Allemandes",
-        "Anthems",
-        "Arias",
-        "Bagatelles",
-        "Ballades",
-        "Berceuses",
-        "Canons",
-        "Canzonas",
-        "Canzonettas",
-        "Caprices",
-        "Cappricios",
-        "Cassations",
-        "Choruses",
-        "Concertinos",
-        "Concertos",
-        "Divertimenti", //*
-        "Divertimentos",
-        "Duets",
-        "Elegies",
-        "Etudes",
-        "Fanfares",
-        "Fantasias",
-        "Fugues",
-        "Gavottes",
-        "Gigues",
-        "Hymns",
-        "Intermezzi", //*
-        "Intermezzos",
-        "Largos",
-        "Lieder", //*
-        "Marches",
-        "Melodies",
-        "Minuets",
-        "Nocturnes",
-        "Nonets",
-        "Octets",
-        "Odes",
-        "Partitas",
-        "Pavans",
-        "Pieces",
-        "Poems",
-        "Polkas",
-        "Polonaises",
-        "Preludes",
-        "Psalms",
-        "Quartets",
-        "Quintets",
-        "Rhapsodies",
-        "Romances",
-        "Rondos",
-        "Scherzos",
-        "Septets",
-        "Sextets",
-        "Sonatas",
-        "Sontinas",
-        "Songs",
-        "Studies",
-        "Suites",
-        "Toccatas",
-        "Trio sonatas",
-        "Trios",
-        "Variations",
-        "Waltzes"};
+            "Adagios",
+            "Allegros",
+            "Allemandes",
+            "Anthems",
+            "Arias",
+            "Bagatelles",
+            "Ballades",
+            "Berceuses",
+            "Canons",
+            "Canzonas",
+            "Canzonettas",
+            "Caprices",
+            "Cappricios",
+            "Cassations",
+            "Choruses",
+            "Concertinos",
+            "Concertos",
+            "Divertimenti", //*
+            "Divertimentos",
+            "Duets",
+            "Elegies",
+            "Etudes",
+            "Fanfares",
+            "Fantasias",
+            "Fugues",
+            "Gavottes",
+            "Gigues",
+            "Hymns",
+            "Intermezzi", //*
+            "Intermezzos",
+            "Largos",
+            "Lieder", //*
+            "Marches",
+            "Melodies",
+            "Minuets",
+            "Nocturnes",
+            "Nonets",
+            "Octets",
+            "Odes",
+            "Partitas",
+            "Pavans",
+            "Pieces",
+            "Poems",
+            "Polkas",
+            "Polonaises",
+            "Preludes",
+            "Psalms",
+            "Quartets",
+            "Quintets",
+            "Rhapsodies",
+            "Romances",
+            "Rondos",
+            "Scherzos",
+            "Septets",
+            "Sextets",
+            "Sonatas",
+            "Sontinas",
+            "Songs",
+            "Studies",
+            "Suites",
+            "Toccatas",
+            "Trio sonatas",
+            "Trios",
+            "Variations",
+            "Waltzes"};
 
     /**
      * Main program entrance point.
@@ -233,7 +236,7 @@ public final class BatchLoading {
                     + ", data_path: " + PREFIX);
 
 
-            for (String currentFile : this.MARC_FILES) {
+            for (String currentFile : getMarcFiles()) {
                 /*
                  * ==> a(nother) MARC data file
                  */
@@ -332,5 +335,24 @@ public final class BatchLoading {
             System.out.println(accumulatedCounts.reportAccumulatedFileCounts());
 
         }
+    }
+
+    private String[] getMarcFiles() {
+        for (final String file : MARC_FILES) {
+            if (new File(PREFIX + file).exists()) {
+                return MARC_FILES;
+            }
+        }
+        log.info("None of the default MARC_FILES exist. Returning listing of files from the batchloading marc_data_path");
+        final File marc_data_path = new File(PREFIX);
+        if (marc_data_path.exists()) {
+            return marc_data_path.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".mrc");
+                }
+            });
+        }
+        return this.MARC_FILES;
     }
 }
