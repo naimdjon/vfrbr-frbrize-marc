@@ -42,7 +42,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- *  FRBRize MARC bibliographic marcRec files to database persistence.
+ * FRBRize MARC bibliographic marcRec files to database persistence.
  * Referenced MARC files will be batch processed to Java JPA annotated classes
  * and persisted.
  */
@@ -173,6 +173,7 @@ public final class BatchLoading {
      * Main program entrance point.
      * No argument expected or processed.
      * Batchloading is intitiated via constructor.
+     *
      * @param args arguments.
      */
     public static void main(final String[] args) {
@@ -197,19 +198,19 @@ public final class BatchLoading {
                     loader.getResourceAsStream("batchLoading.properties");
             if (inStream == null) {
                 log.error("==*!!*== Can't load batchLoading.properties.");
-                throw new Exception("Can't load batchLoading properties");
-            } else {
-                try {
-                    final Properties batchLoadingProps = new Properties();
-                    batchLoadingProps.load(inStream);
-
-                    PREFIX =
-                            batchLoadingProps.getProperty("marc_data_path");
-                } catch (IOException ex) {
-                    log.error("==*!!*== load failed for authCache.properties.");
-                    throw ex;
-                }
+                throw new IllegalStateException("Can't load batchLoading properties");
             }
+
+            try {
+                final Properties batchLoadingProps = new Properties();
+                batchLoadingProps.load(inStream);
+                PREFIX =
+                        batchLoadingProps.getProperty("marc_data_path").replaceFirst("^~", System.getProperty("user.home"));
+            } catch (IOException ex) {
+                log.error("==*!!*== load failed for authCache.properties.");
+                throw ex;
+            }
+
 
             this.startBatchloading();
 
@@ -234,7 +235,6 @@ public final class BatchLoading {
 
             System.out.println("======= Starting BatchLoad process: \n"
                     + ", data_path: " + PREFIX);
-
 
             for (String currentFile : getMarcFiles()) {
                 /*
@@ -340,6 +340,7 @@ public final class BatchLoading {
     private String[] getMarcFiles() {
         for (final String file : MARC_FILES) {
             if (new File(PREFIX + file).exists()) {
+                System.out.println("exists...");
                 return MARC_FILES;
             }
         }
