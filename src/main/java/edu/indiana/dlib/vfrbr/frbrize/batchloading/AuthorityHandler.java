@@ -40,7 +40,6 @@ import org.yaz4j.ResultSet;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
@@ -71,12 +70,15 @@ public class AuthorityHandler {
     private final String WORK_ATTRIB = "@attr 1=4 @attr 2=104 @attr 3=1 @attr 4=1 @attr 5=100 @attr 6=3 ";
     private final String PERSON_ATTRIB = "@attr 1=1 @attr 2=104 @attr 3=1 @attr 4=1 @attr 5=100 @attr 6=3 ";
     private final String CORP_ATTRIB = "@attr 1=2 @attr 2=104 @attr 3=1 @attr 4=1 @attr 5=100 @attr 6=3 ";
-
+    private final static boolean isEnabled = !Boolean.getBoolean("authorityDisabled");
     /**
      * Instantiate an AuthorityHandler,
      * also loading the authority handler properties.
      */
     public AuthorityHandler() {
+        if (!isEnabled) {
+            return;
+        }
         final ClassLoader loader =
                 Thread.currentThread().getContextClassLoader();
         final InputStream inSteam =
@@ -103,7 +105,7 @@ public class AuthorityHandler {
                 AUTHORITY_USERNAME = authCacheProps.getProperty("authority_username");
                 AUTHORITY_PASSWORD = authCacheProps.getProperty("authority_password");
 
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 log.error("==*!!*== load failed for authCache.properties.");
             }
         }
@@ -117,7 +119,9 @@ public class AuthorityHandler {
      * @return a cached authority MarcRecord, or null.
      */
     public final MarcRecord getAuthorityPersonRecord(final MarcDataField personField) {
-
+        if (!isEnabled) {
+            return null;
+        }
         final String nameFromMARC =
                 personField.concatSubfields("abcdejq".toCharArray());
 
@@ -184,9 +188,10 @@ public class AuthorityHandler {
      * @param corpBodyField the corporate MarcDataField to match.
      * @return a matching authority MarcRecord or null.
      */
-    public final MarcRecord getAuthorityCorporateBodyRecord(
-            final MarcDataField corpBodyField) {
-
+    public final MarcRecord getAuthorityCorporateBodyRecord(final MarcDataField corpBodyField) {
+        if (!isEnabled) {
+            return null;
+        }
         final String nameFromMARC =
                 corpBodyField.concatSubfields("abcdenq".toCharArray());
         final String[] corpFields = {"110", "111"};
@@ -236,9 +241,10 @@ public class AuthorityHandler {
      * @param workMapper the WorkMapper holding the Work MarcDataField to match.
      * @return the matching cached authority MarcRecord or null.
      */
-    public final MarcRecord getWorkRecordFromAuthority(
-            final WorkMapper workMapper) {
-
+    public final MarcRecord getWorkRecordFromAuthority(final WorkMapper workMapper) {
+        if (!isEnabled) {
+            return null;
+        }
         final MarcDataField composerField = workMapper.getComposerField();
         String name = "";
         String path;
@@ -300,8 +306,7 @@ public class AuthorityHandler {
      * @param lowerCase whether to lowercase the result.
      * @return normalized String.
      */
-    public static String normalize(final String unNormal,
-                             final boolean lowerCase) {
+    public static String normalize(final String unNormal, final boolean lowerCase) {
         String normaled = unNormal;
         if (normaled == null) {
             // always return something even from nothing
