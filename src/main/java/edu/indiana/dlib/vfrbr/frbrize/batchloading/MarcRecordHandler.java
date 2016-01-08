@@ -1,21 +1,21 @@
 /**
  * Copyright 2009-2011, Trustees of Indiana University
  * All rights reserved.
- *
+ * <p/>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- *
- *   Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- *   Neither the name of Indiana University nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
+ * <p/>
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * <p/>
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p/>
+ * Neither the name of Indiana University nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p/>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,17 +33,14 @@ package edu.indiana.dlib.vfrbr.frbrize.batchloading;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.mappers.ManifestationMapper;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcDataField;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord;
-
 import edu.indiana.dlib.vfrbr.persist.dao.DAOFactory;
 import edu.indiana.dlib.vfrbr.persist.entity.manifestation.ManifestationJpa;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 /**
- *  Handle a MarcRecord.
- *
+ * Handle a MarcRecord.
  */
 public class MarcRecordHandler {
 
@@ -57,7 +54,8 @@ public class MarcRecordHandler {
     private final Counts count;
 
     /**
-     *  Instantiate a new MarcRecordHandler.
+     * Instantiate a new MarcRecordHandler.
+     *
      * @param daoFactory a DAOFactory holding the persistence context.
      */
     public MarcRecordHandler(DAOFactory daoFactory,
@@ -67,7 +65,8 @@ public class MarcRecordHandler {
     }
 
     /**
-     *  Register handling a MarcRecord of type OTHER.
+     * Register handling a MarcRecord of type OTHER.
+     *
      * @param marcRec
      */
     public final void registerOther(final MarcRecord marcRec) {
@@ -79,9 +78,10 @@ public class MarcRecordHandler {
     }
 
     /**
-     *  FRBRize a MarcRecord of type RECORDING.
+     * FRBRize a MarcRecord of type RECORDING.
+     *
      * @param marcRec the MarcRecord to process.
-     * @param count counts to increment.
+     * @param count   counts to increment.
      */
     public final void frbrizeRecord(final MarcRecord marcRec) {
 
@@ -96,22 +96,21 @@ public class MarcRecordHandler {
 
             marcRecManif = firstManifestationPass(marcRec);
 
-            manifWorkCount =
-                    worksPass(marcRec, marcRecManif);
+            manifWorkCount = worksPass(marcRec, marcRecManif);
 
             finalManifestationPass(marcRec,
-                                   marcRecManif,
-                                   manifWorkCount);
+                    marcRecManif,
+                    manifWorkCount);
 
         } catch (Exception ex) {
-
+             ex.printStackTrace();
             // report exception and marcRecord
             log.error(
                     "\n********\n"
-                    + "* Processing exception at ["
-                    + count.getFileName() + ":" + count.getRecNum() + "]\n"
-                    + "* attempting to continue processing with next record\n"
-                    + "********",
+                            + "* Processing exception at ["
+                            + count.getFileName() + ":" + count.getRecNum() + "]\n"
+                            + "* attempting to continue processing with next record\n"
+                            + "********",
                     ex);
 
         } finally {
@@ -121,18 +120,19 @@ public class MarcRecordHandler {
     }
 
     /**
-     *  Process the responsibleParties in a MarcRecord.
+     * Process the responsibleParties in a MarcRecord.
+     *
      * @param marcRec the MarcRecord.
-     * @param count counts to increment.
+     * @param count   counts to increment.
      */
     private void responsiblePartiesPass(final MarcRecord marcRec) {
 
         log.info("==== Start of responsibleParties pass");
 
         final String[] personFieldTags = {
-            "100", "600", "700"};
+                "100", "600", "700"};
         final String[] corporateFieldTags = {
-            "110", "111", "610", "611", "710", "711"};
+                "110", "111", "610", "611", "710", "711"};
 
         //get all contributor fields from the marcRecord
         final List<MarcDataField> personFields =
@@ -141,32 +141,23 @@ public class MarcRecordHandler {
                 marcRec.getDataFields(corporateFieldTags);
 
         //for each person
-        final PersonFieldHandler persHandler =
-                new PersonFieldHandler(this.daoFac,
-                                       this.count);
+        final PersonFieldHandler persHandler = new PersonFieldHandler(this.daoFac, this.count);
 
         for (MarcDataField personField : personFields) {
-
-            persHandler.handlePersonField(personField,
-                                          marcRec.getControlNumber());
+            persHandler.handlePersonField(personField, marcRec.getControlNumber());
         }
-
         // for each corporateBody
-        final CorporateFieldHandler corpHandler =
-                new CorporateFieldHandler(this.daoFac,
-                                          this.count);
-
+        final CorporateFieldHandler corpHandler = new CorporateFieldHandler(this.daoFac, this.count);
         for (MarcDataField corpBodyField : corpBodyFields) {
-
-            corpHandler.handleCorporateField(corpBodyField,
-                                             marcRec.getControlNumber());
+            corpHandler.handleCorporateField(corpBodyField, marcRec.getControlNumber());
         }
 
         log.info("==== End of responsibleParties pass");
     }
 
     /**
-     *  Initialize the ManifestationJpa for this MarcRecord.
+     * Initialize the ManifestationJpa for this MarcRecord.
+     *
      * @param marcRec the MarcRecord.
      * @return a new ManifestationJpa for this MarcRecord.
      */
@@ -188,10 +179,11 @@ public class MarcRecordHandler {
     }
 
     /**
-     *  Process the WorkJpa works in a MarcRecord.
-     * @param marcRec the MarcRecord.
+     * Process the WorkJpa works in a MarcRecord.
+     *
+     * @param marcRec      the MarcRecord.
      * @param marcRecManif the ManifestationJpa for this MarcRecord.
-     * @param count counts to increment.
+     * @param count        counts to increment.
      */
     private int worksPass(final MarcRecord marcRec,
                           final ManifestationJpa marcRecManif) {
@@ -217,9 +209,9 @@ public class MarcRecordHandler {
         //process work fields
         final WorkFieldHandler workFieldHandler =
                 new WorkFieldHandler(this.daoFac,
-                                     marcRec,
-                                     marcRecManif,
-                                     this.count);
+                        marcRec,
+                        marcRecManif,
+                        this.count);
 
         for (WorkField workField : workFields) {
 
@@ -234,10 +226,11 @@ public class MarcRecordHandler {
     }
 
     /**
-     *  Process the ManifestationJpa manifestation for this MarcRecord.
-     * @param marcBibRec the MarcRecord.
+     * Process the ManifestationJpa manifestation for this MarcRecord.
+     *
+     * @param marcBibRec   the MarcRecord.
      * @param marcRecManif the ManifestationJpa manifestation.
-     * @param count counts to increment.
+     * @param count        counts to increment.
      */
     private void finalManifestationPass(final MarcRecord marcBibRec,
                                         final ManifestationJpa marcRecManif,
@@ -247,12 +240,12 @@ public class MarcRecordHandler {
 
         final ManifestationRecordHandler manifRecHandler =
                 new ManifestationRecordHandler(this.daoFac,
-                                               this.count);
+                        this.count);
 
         manifRecHandler.handleManifestationRecord(marcBibRec,
-                                                  marcRecManif,
-                                                  manifWorkCount);
-        
+                marcRecManif,
+                manifWorkCount);
+
         log.info("==== End of second manifestation pass");
     }
 }

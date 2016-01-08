@@ -1,21 +1,21 @@
 /**
  * Copyright 2009-2011, Trustees of Indiana University
  * All rights reserved.
- *
+ * <p/>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
- *   Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- *
- *   Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- *   Neither the name of Indiana University nor the names of its
- *   contributors may be used to endorse or promote products derived from this
- *   software without specific prior written permission.
- *
+ * <p/>
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ * <p/>
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ * <p/>
+ * Neither the name of Indiana University nor the names of its
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p/>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -33,16 +33,15 @@ package edu.indiana.dlib.vfrbr.frbrize.batchloading;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.mappers.PersonMapper;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcDataField;
 import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord;
-
 import edu.indiana.dlib.vfrbr.persist.dao.DAOFactory;
 import edu.indiana.dlib.vfrbr.persist.dao.PersonDAO;
 import edu.indiana.dlib.vfrbr.persist.entity.responsibleparty.PersonJpa;
-import javax.persistence.EntityTransaction;
-
 import org.apache.log4j.Logger;
 
+import javax.persistence.EntityTransaction;
+
 /**
- *  Handler for person field of a MarcRecord.
+ * Handler for person field of a MarcRecord.
  */
 public class PersonFieldHandler {
 
@@ -57,7 +56,8 @@ public class PersonFieldHandler {
     final private FindPersisted findPersisted;
 
     /**
-     *  Instantiate a new PersonFieldHander.
+     * Instantiate a new PersonFieldHander.
+     *
      * @param daoFactory a DAOFactory holding the persistence context.
      */
     public PersonFieldHandler(final DAOFactory daoFactory,
@@ -70,7 +70,8 @@ public class PersonFieldHandler {
     }
 
     /**
-     *  Handle a single person field of a MarcRecord.
+     * Handle a single person field of a MarcRecord.
+     *
      * @param personField
      * @param count
      */
@@ -86,19 +87,12 @@ public class PersonFieldHandler {
             // already loaded
             // and said so below, by case
         } else {
-
             final PersonMapper personMapper = new PersonMapper();
-
             final AuthorityHandler authHandler = new AuthorityHandler();
-
-            final MarcRecord authRecord =
-                    authHandler.getAuthorityPersonRecord(personField);
-
+            final MarcRecord authRecord = authHandler.getAuthorityPersonRecord(personField);
             if (authRecord == null) {
                 // no authority record, build from MarcDataField
-
-                EntityTransaction entran =
-                        this.daoFactory.getEntityManager().getTransaction();
+                EntityTransaction entran = this.daoFactory.getEntityManager().getTransaction();
                 entran.begin();
 
                 if (log.isInfoEnabled()) {
@@ -115,9 +109,9 @@ public class PersonFieldHandler {
                 entran.begin();
 
                 this.personDAO.reportG2Bib(person,
-                                           bibRecIdent,
-                                           personField.getTag(),
-                                           personField.toString());
+                        bibRecIdent,
+                        personField.getTag(),
+                        personField.toString());
                 entran.commit();
                 this.count.incrementPersistedPersons();
 
@@ -157,7 +151,8 @@ public class PersonFieldHandler {
     }
 
     /**
-     *  Is the Person in a MarcDataField already persisted?
+     * Is the Person in a MarcDataField already persisted?
+     *
      * @param personField the MarcDataField holding a Person.
      * @return whether the person is already loaded.
      */
@@ -166,8 +161,8 @@ public class PersonFieldHandler {
         boolean alreadyLoaded = false;
 
         if (null != this.findPersisted.person(personField,
-                                              "referenced",
-                                              this.personDAO)) {
+                "referenced",
+                this.personDAO)) {
             alreadyLoaded = true;
         }
 

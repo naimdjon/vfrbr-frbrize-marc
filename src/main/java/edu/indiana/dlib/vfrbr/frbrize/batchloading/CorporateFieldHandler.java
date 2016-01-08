@@ -36,8 +36,9 @@ import edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord;
 import edu.indiana.dlib.vfrbr.persist.dao.CorporateBodyDAO;
 import edu.indiana.dlib.vfrbr.persist.dao.DAOFactory;
 import edu.indiana.dlib.vfrbr.persist.entity.responsibleparty.CorporateBodyJpa;
-import javax.persistence.EntityTransaction;
 import org.apache.log4j.Logger;
+
+import javax.persistence.EntityTransaction;
 
 /**
  *  Handler for CorporateBody field of a MarcRecord.
@@ -86,8 +87,7 @@ public class CorporateFieldHandler {
             // logged outcome below, by case
         } else {
 
-            final MarcRecord authRecord = new AuthorityHandler().
-                    getAuthorityCorporateBodyRecord(corpBodyField);
+            final MarcRecord authRecord = new AuthorityHandler().getAuthorityCorporateBodyRecord(corpBodyField);
 
             if (authRecord == null) {
                 //no authority match, build from MARC bibliographic marcRecord

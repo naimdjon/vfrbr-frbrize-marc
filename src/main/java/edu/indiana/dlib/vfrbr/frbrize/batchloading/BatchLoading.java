@@ -41,6 +41,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static com.google.common.collect.Sets.newHashSet;
+import static edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord.OTHER;
+import static edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord.RECORDING;
+import static edu.indiana.dlib.vfrbr.frbrize.batchloading.marcDecorators.MarcRecord.SCORE;
+
 /**
  * FRBRize MARC bibliographic marcRec files to database persistence.
  * Referenced MARC files will be batch processed to Java JPA annotated classes
@@ -232,7 +237,7 @@ public final class BatchLoading {
         try {
             log.warn("======= Starting BatchLoad process: \n"
                     + ", data_path: " + PREFIX);
-
+            System.out.println("location:" + getClass().getProtectionDomain().getCodeSource().getLocation());
             System.out.println("======= Starting BatchLoad process: \n"
                     + ", data_path: " + PREFIX);
 
@@ -264,11 +269,9 @@ public final class BatchLoading {
                      */
                     count.incrementRecNum();
                     final MarcRecord marcRec = marcRecs.next();
-                    final MarcRecordHandler recHandler =
-                            new MarcRecordHandler(daoFac, count);
+                    final MarcRecordHandler recHandler = new MarcRecordHandler(daoFac, count);
 
-                    if (marcRec.getType().equals(MarcRecord.RECORDING)
-                            || marcRec.getType().equals(MarcRecord.SCORE)) {
+                    if (newHashSet(RECORDING, SCORE, OTHER).contains(marcRec.getType())) {
                         /*
                          * ==> a MARC Record of type RECORDING or SCORE
                          */
