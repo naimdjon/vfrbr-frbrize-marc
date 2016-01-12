@@ -213,6 +213,9 @@ public final class BatchLoading {
                 if (marc_data_path != null && !marc_data_path.isEmpty()) {
                     System.out.println("Using marc_data_path:" + marc_data_path);
                     PREFIX = marc_data_path;
+                    if (PREFIX.endsWith(File.separator)) {
+                        PREFIX = PREFIX.concat(File.separator);
+                    }
                 } else {
                     PREFIX =
                             batchLoadingProps.getProperty("marc_data_path").replaceFirst("^~", System.getProperty("user.home"));
@@ -226,6 +229,7 @@ public final class BatchLoading {
             this.startBatchloading();
 
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Error in batchloading process.", e);
         }
     }
@@ -329,6 +333,7 @@ public final class BatchLoading {
             System.out.println("======= BatchLoad process complete.");
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             log.error(ex.getMessage(), ex);
             log.error("\n"
                     + "============\n"
@@ -355,12 +360,14 @@ public final class BatchLoading {
         log.info("None of the default MARC_FILES exist. Returning listing of files from the batchloading marc_data_path");
         final File marc_data_path = new File(PREFIX);
         if (marc_data_path.exists()) {
-            return marc_data_path.list(new FilenameFilter() {
+            final String[] list = marc_data_path.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
+                    System.out.println("name.endsWith(\".mrc\"):" + name.endsWith(".mrc"));
                     return name.endsWith(".mrc");
                 }
             });
+            return list;
         }
         return this.MARC_FILES;
     }
