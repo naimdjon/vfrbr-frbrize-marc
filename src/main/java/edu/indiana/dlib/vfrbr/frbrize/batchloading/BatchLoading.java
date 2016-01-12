@@ -1,21 +1,21 @@
 /**
  * Copyright 2009-2011, Trustees of Indiana University
  * All rights reserved.
- * <p/>
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * <p/>
+ * <p>
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * <p/>
+ * <p>
  * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * <p/>
+ * <p>
  * Neither the name of Indiana University nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * <p/>
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -209,8 +209,14 @@ public final class BatchLoading {
             try {
                 final Properties batchLoadingProps = new Properties();
                 batchLoadingProps.load(inStream);
-                PREFIX =
-                        batchLoadingProps.getProperty("marc_data_path").replaceFirst("^~", System.getProperty("user.home"));
+                final String marc_data_path = System.getProperty("marc_data_path");
+                if (marc_data_path != null && !marc_data_path.isEmpty()) {
+                    System.out.println("Using marc_data_path:" + marc_data_path);
+                    PREFIX = marc_data_path;
+                } else {
+                    PREFIX =
+                            batchLoadingProps.getProperty("marc_data_path").replaceFirst("^~", System.getProperty("user.home"));
+                }
             } catch (IOException ex) {
                 log.error("==*!!*== load failed for authCache.properties.");
                 throw ex;
@@ -343,7 +349,6 @@ public final class BatchLoading {
     private String[] getMarcFiles() {
         for (final String file : MARC_FILES) {
             if (new File(PREFIX + file).exists()) {
-                System.out.println("exists...");
                 return MARC_FILES;
             }
         }
