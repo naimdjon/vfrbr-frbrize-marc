@@ -213,7 +213,7 @@ public final class BatchLoading {
                 if (marc_data_path != null && !marc_data_path.isEmpty()) {
                     System.out.println("Using marc_data_path:" + marc_data_path);
                     PREFIX = marc_data_path;
-                    if (PREFIX.endsWith(File.separator)) {
+                    if (!PREFIX.endsWith(File.separator)) {
                         PREFIX = PREFIX.concat(File.separator);
                     }
                 } else {
