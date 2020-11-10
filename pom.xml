@@ -111,12 +111,12 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>19.0</version>
+      <version>30.0-jre</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
+      <version>1.2.17</version>
     </dependency>
     <dependency>
       <groupId>org.marc4j</groupId>
@@ -148,7 +148,7 @@
       <dependency>
           <groupId>commons-collections</groupId>
           <artifactId>commons-collections</artifactId>
-          <version>3.2.1</version>
+          <version>3.2.2</version>
       </dependency>
       <dependency>
           <groupId>commons-pool</groupId>
@@ -163,7 +163,7 @@
       <dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
-          <version>5.1.6</version>
+          <version>8.0.16</version>
       </dependency>
       <dependency>
           <groupId>org.springframework</groupId>
